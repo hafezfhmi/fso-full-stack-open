@@ -98,8 +98,32 @@ const App = () => {
 
   const submitInput = (event) => {
     event.preventDefault();
-    if (persons.find((curr) => curr.name === newName) !== undefined) {
-      alert(`${newName} is already added to phonebook`);
+    // We compare new data with persons array to see if its already in array
+    let updatedData = persons.find((curr) => curr.name === newName);
+
+    if (updatedData !== undefined) {
+      // We change the number with the new number
+      updatedData.number = newNumber;
+
+      // alert(`${newName} is already added to phonebook`);
+      let answer = window.confirm(
+        `${updatedData.name} is already added to phonebook, replace the old number with a new one?`
+      );
+
+      if (answer) {
+        // We update the data on the server using updatePerson and then we update the person state for the changed person
+        phonebookServices
+          .updatePerson(updatedData.id, updatedData)
+          .then((response) =>
+            setPersons(
+              persons.map((curr) =>
+                curr.id !== updatedData.id ? curr : response
+              )
+            )
+          );
+        setNewName('');
+        setNewNumber('');
+      }
     } else {
       // We post data to the server and we also do setPersons because our data is only fetched at initial render \
       // (Modified setPersons to use response data instead)
