@@ -35,17 +35,39 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ persons, filterName }) => {
+const Persons = ({ persons, filterName, setPersons }) => {
   return persons.map((curr) => {
     if (new RegExp(filterName, 'i').test(curr.name)) {
-      return <Person key={curr.name} name={curr.name} number={curr.number} />;
+      return (
+        <Person
+          key={curr.name}
+          name={curr.name}
+          number={curr.number}
+          id={curr.id}
+          persons={persons}
+          setPersons={setPersons}
+        />
+      );
     }
     return null;
   });
 };
 
-const Person = ({ name, number }) => {
-  return <p>{`${name} ${number}`}</p>;
+const Person = ({ name, number, id, persons, setPersons }) => {
+  const deletion = (event) => {
+    event.preventDefault();
+    let answer = window.confirm(`Delete ${name}?`);
+    if (answer) {
+      phonebookServices.deletePerson(id);
+      setPersons(persons.filter((curr) => curr.id !== id));
+    }
+  };
+
+  return (
+    <p>
+      {`${name} ${number}`} <button onClick={deletion}>delete</button>
+    </p>
+  );
 };
 
 const App = () => {
@@ -82,7 +104,7 @@ const App = () => {
       // We post data to the server and we also do setPersons because our data is only fetched at initial render \
       // (Modified setPersons to use response data instead)
       phonebookServices
-        .add({ name: newName, number: newNumber })
+        .addPerson({ name: newName, number: newNumber })
         .then((response) => {
           setPersons(persons.concat(response));
         });
@@ -104,7 +126,11 @@ const App = () => {
         submitInput={submitInput}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filterName={filterName} />
+      <Persons
+        persons={persons}
+        filterName={filterName}
+        setPersons={setPersons}
+      />
     </div>
   );
 };

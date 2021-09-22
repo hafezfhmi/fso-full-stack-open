@@ -5,13 +5,18 @@ const getAll = () => {
   return axios.get(baseURL).then((response) => response.data);
 };
 
-const add = (newPhoneNumber) => {
+const addPerson = (newPhoneNumber) => {
   return axios.post(baseURL, newPhoneNumber).then((response) => response.data);
+};
+
+const deletePerson = (id) => {
+  return axios.delete(`${baseURL}/${id}`);
 };
 
 const phonebookServices = {
   getAll,
-  add,
+  addPerson,
+  deletePerson,
 };
 
 export default phonebookServices;
