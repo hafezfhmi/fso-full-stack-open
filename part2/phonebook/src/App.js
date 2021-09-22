@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import phonebookServices from './services/phonebook';
 
 const SearchFilter = ({ getFilter, filterName }) => {
   return (
@@ -55,8 +55,10 @@ const App = () => {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      setPersons(response.data);
+    // getAll executed and .then is chained afterwards
+    // more like axios.get().then().then()
+    phonebookServices.getAll().then((response) => {
+      setPersons(response);
     });
   }, []);
 
@@ -77,7 +79,14 @@ const App = () => {
     if (persons.find((curr) => curr.name === newName) !== undefined) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+      // We post data to the server and we also do setPersons because our data is only fetched at initial render \
+      // (Modified setPersons to use response data instead)
+      phonebookServices
+        .add({ name: newName, number: newNumber })
+        .then((response) => {
+          setPersons(persons.concat(response));
+        });
+
       setNewName('');
       setNewNumber('');
     }
