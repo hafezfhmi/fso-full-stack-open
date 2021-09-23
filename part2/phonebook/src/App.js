@@ -70,11 +70,27 @@ const Person = ({ name, number, id, persons, setPersons }) => {
   );
 };
 
+const NotificationMessage = ({ message }, { type }) => {
+  return (
+    <p
+      style={{
+        backgroundColor: '#f1f1f1',
+        color: 'green',
+        border: '2px solid green',
+        padding: '5px',
+      }}
+    >
+      {message}
+    </p>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filterName, setFilterName] = useState('');
+  const [showMessage, setShowMessage] = useState(null);
 
   useEffect(() => {
     // getAll executed and .then is chained afterwards
@@ -114,13 +130,18 @@ const App = () => {
         // We update the data on the server using updatePerson and then we update the person state for the changed person
         phonebookServices
           .updatePerson(updatedData.id, updatedData)
-          .then((response) =>
+          .then((response) => {
+            setShowMessage(`Updated ${newName}`);
+            setTimeout(() => {
+              setShowMessage(null);
+            }, 3000);
+
             setPersons(
               persons.map((curr) =>
                 curr.id !== updatedData.id ? curr : response
               )
-            )
-          );
+            );
+          });
         setNewName('');
         setNewNumber('');
       }
@@ -130,6 +151,11 @@ const App = () => {
       phonebookServices
         .addPerson({ name: newName, number: newNumber })
         .then((response) => {
+          setShowMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setShowMessage(null);
+          }, 3000);
+
           setPersons(persons.concat(response));
         });
 
@@ -141,6 +167,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {showMessage && <NotificationMessage message={showMessage} />}
+
       <SearchFilter getFilter={getFilter} filterName={filterName} />
       <PersonForm
         getName={getName}
