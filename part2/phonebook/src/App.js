@@ -70,17 +70,26 @@ const Person = ({ name, number, id, persons, setPersons }) => {
   );
 };
 
-const NotificationMessage = ({ message }, { type }) => {
+const NotificationMessage = ({ message }) => {
   return (
     <p
-      style={{
-        backgroundColor: '#f1f1f1',
-        color: 'green',
-        border: '2px solid green',
-        padding: '5px',
-      }}
+      style={
+        message.type === 'danger'
+          ? {
+              backgroundColor: '#f1f1f1',
+              color: 'red',
+              border: '2px solid red',
+              padding: '5px',
+            }
+          : {
+              backgroundColor: '#f1f1f1',
+              color: 'green',
+              border: '2px solid green',
+              padding: '5px',
+            }
+      }
     >
-      {message}
+      {message.message}
     </p>
   );
 };
@@ -131,7 +140,7 @@ const App = () => {
         phonebookServices
           .updatePerson(updatedData.id, updatedData)
           .then((response) => {
-            setShowMessage(`Updated ${newName}`);
+            setShowMessage({ message: `Updated ${newName}`, type: 'normal' });
             setTimeout(() => {
               setShowMessage(null);
             }, 3000);
@@ -141,6 +150,16 @@ const App = () => {
                 curr.id !== updatedData.id ? curr : response
               )
             );
+          })
+          .catch((response) => {
+            setShowMessage({
+              message: `Information of ${newName} has already been removed from server`,
+              type: 'danger',
+            });
+            setTimeout(() => {
+              setShowMessage(null);
+            }, 3000);
+            setPersons(persons.filter((curr) => curr.name !== newName));
           });
         setNewName('');
         setNewNumber('');
@@ -151,7 +170,7 @@ const App = () => {
       phonebookServices
         .addPerson({ name: newName, number: newNumber })
         .then((response) => {
-          setShowMessage(`Added ${newName}`);
+          setShowMessage({ message: `Added ${newName}`, type: 'normal' });
           setTimeout(() => {
             setShowMessage(null);
           }, 3000);
