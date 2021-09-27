@@ -1,5 +1,7 @@
 import axios from 'axios';
-const baseURL = 'http://localhost:3001/api/persons';
+// Since we are going to copy it to backend folder, base url can be relative url(same folder structure).
+// In dev mode, we added proxy to package.json for it to work as usual.
+const baseURL = '/api/persons';
 
 const getAll = () => {
   return axios.get(baseURL).then((response) => response.data);
