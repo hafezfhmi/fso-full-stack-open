@@ -11,7 +11,7 @@ function App() {
   // Get data using axios when country state change
   // Update: Since we are taking all of the data and not individual data, we can reduce http request by sending request only once
   useEffect(() => {
-    axios.get('https://restcountries.eu/rest/v2/all').then((res) => {
+    axios.get('https://restcountries.com/v2/all').then((res) => {
       setCountryData(res.data);
     });
   }, []);
