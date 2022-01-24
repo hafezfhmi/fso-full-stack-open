@@ -87,6 +87,15 @@ const App = () => {
           }, 3000);
 
           setPersons(persons.concat(response));
+        })
+        .catch((error) => {
+          setShowMessage({
+            message: error.response.data,
+            type: 'danger',
+          });
+          setTimeout(() => {
+            setShowMessage(null);
+          }, 3000);
         });
 
       setNewName('');
