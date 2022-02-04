@@ -90,7 +90,7 @@ const App = () => {
         })
         .catch((error) => {
           setShowMessage({
-            message: error.response.data,
+            message: error.response.data.error,
             type: 'danger',
           });
           setTimeout(() => {
