@@ -14,4 +14,22 @@ const favoriteBlog = (blogs) => {
   );
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+  let authorList = [];
+
+  blogs.forEach((curr) => {
+    let found = authorList.find((element) => element.author == curr.author);
+
+    if (found) {
+      authorList[authorList.indexOf(found)].blogs++;
+    } else {
+      authorList.push({ author: curr.author, blogs: 1 });
+    }
+  });
+
+  return authorList.reduce((acc, curr) =>
+    acc.author < curr.author ? curr : acc
+  );
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
