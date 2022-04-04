@@ -28,8 +28,26 @@ const mostBlogs = (blogs) => {
   });
 
   return authorList.reduce((acc, curr) =>
-    acc.author < curr.author ? curr : acc
+    acc.blogs < curr.blogs ? curr : acc
   );
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
+const mostLikes = (blogs) => {
+  let authorList = [];
+
+  blogs.forEach((curr) => {
+    let found = authorList.find((element) => element.author == curr.author);
+
+    if (found) {
+      authorList[authorList.indexOf(found)].likes += curr.likes;
+    } else {
+      authorList.push({ author: curr.author, likes: curr.likes });
+    }
+  });
+
+  return authorList.reduce((acc, curr) =>
+    acc.likes < curr.likes ? curr : acc
+  );
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };
