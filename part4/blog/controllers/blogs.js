@@ -13,18 +13,11 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 });
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    return authorization.substring(7);
-  }
-};
-
 blogsRouter.post('/', async (request, response, next) => {
   try {
     const { title, author, url, likes } = request.body;
 
-    const token = getTokenFrom(request);
+    const token = request.token;
     const decodedToken = jwt.verify(token, process.env.SECRET);
 
     if (!decodedToken.id) {
