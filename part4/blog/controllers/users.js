@@ -18,7 +18,7 @@ usersRouter.post('/', async (req, res, next) => {
 
     const existedUsername = User.findOne({ username });
     if (existedUsername) {
-      res.status(400).json({ error: 'username must be unique' });
+      return res.status(400).json({ error: 'username must be unique' });
     }
 
     const saltRounds = 10;
