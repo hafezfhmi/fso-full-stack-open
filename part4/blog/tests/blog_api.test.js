@@ -74,6 +74,23 @@ test('Removing an item', async () => {
   expect(blogIdList).not.toContain(blogToDelete.id);
 });
 
+test('Updating blog', async () => {
+  // Get blogs from db
+  const currentBlogs = await api.get('/api/blogs');
+
+  // Get blogs to update
+  const blogToUpdate = currentBlogs.body[0];
+
+  let updatedBlog = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send({ likes: blogToUpdate.likes + 1 });
+
+  updatedBlog = updatedBlog.body;
+
+  expect(updatedBlog.likes).not.toBe(blogToUpdate.likes);
+  expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
