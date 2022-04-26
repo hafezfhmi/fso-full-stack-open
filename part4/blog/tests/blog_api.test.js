@@ -30,6 +30,21 @@ test('id is defined in one of the object', async () => {
   expect(returnedBlog.body[0].id).toBeDefined();
 });
 
+test('Likes is default to 0', async () => {
+  const noLikeBlog = new Blog({
+    title: 'Meowie meow',
+    author: 'Meowie',
+    url: 'meowie.com',
+  });
+
+  await noLikeBlog.save();
+
+  const returnedBlog = await api.get('/api/blogs');
+  const lastBlog = returnedBlog.body[returnedBlog.body.length - 1];
+
+  expect(lastBlog.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
