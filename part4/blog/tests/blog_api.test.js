@@ -24,6 +24,12 @@ test('Returns correct amount of blog post', async () => {
   expect(returnedBlog.body).toHaveLength(initialBlog.length);
 });
 
+test('id is defined in one of the object', async () => {
+  const returnedBlog = await api.get('/api/blogs');
+
+  expect(returnedBlog.body[0].id).toBeDefined();
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
