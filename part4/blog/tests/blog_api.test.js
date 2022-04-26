@@ -45,6 +45,12 @@ test('Likes is default to 0', async () => {
   expect(lastBlog.likes).toBe(0);
 });
 
+test('Bad request if title and url is missing', async () => {
+  const nonCompletedBlog = new Blog({ author: 'Roofie', likes: 2 });
+
+  await api.post('/api/blogs').send(nonCompletedBlog).expect(400);
+}, 100000);
+
 afterAll(() => {
   mongoose.connection.close();
 });
