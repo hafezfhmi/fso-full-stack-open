@@ -51,6 +51,29 @@ test('Bad request if title and url is missing', async () => {
   await api.post('/api/blogs').send(nonCompletedBlog).expect(400);
 }, 100000);
 
+test('Removing an item', async () => {
+  // Get blogs from db
+  const currentBlogs = await api.get('/api/blogs');
+
+  // Get blogs to delete
+  const blogToDelete = currentBlogs.body[0];
+
+  // Delete
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  // Get blogs after delete
+  const noteAtEnd = await api.get('/api/blogs');
+
+  // Check blogs after delete length
+  expect(noteAtEnd.body).toHaveLength(initialBlog.length - 1);
+
+  // Get content of blogs after delete
+  const blogIdList = noteAtEnd.body.map((curr) => curr.id);
+
+  // Make sure deleted content is not in db
+  expect(blogIdList).not.toContain(blogToDelete.id);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
