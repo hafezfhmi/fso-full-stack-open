@@ -16,7 +16,7 @@ usersRouter.post('/', async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
-    const existedUsername = User.findOne({ username });
+    const existedUsername = await User.findOne({ username });
     if (existedUsername) {
       return res.status(400).json({ error: 'username must be unique' });
     }
