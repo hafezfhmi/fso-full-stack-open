@@ -40,12 +40,15 @@ const tokenExtractor = (req, res, next) => {
 
 const userExtractor = (req, res, next) => {
   const token = req.token;
-  const decodedToken = jwt.verify(token, process.env.SECRET);
 
-  if (decodedToken.id) {
-    req.user = decodedToken.id;
-  } else {
-    req.user = null;
+  if (token) {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (decodedToken.id) {
+      req.user = decodedToken.id;
+    } else {
+      req.user = null;
+    }
   }
 
   next();

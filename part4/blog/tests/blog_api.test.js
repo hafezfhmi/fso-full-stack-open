@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../app');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const api = supertest(app);
 
@@ -10,9 +11,34 @@ const initialBlog = [
   { title: 'Doggie dog', author: 'Doggie', url: 'doggie.com', likes: 5 },
 ];
 
+let userWithToken;
+
 beforeEach(async () => {
+  // Delete user
+  await User.deleteMany({});
+
+  // Create a new user and get password hash
+  const createdUser = await api
+    .post('/api/users')
+    .send({ username: 'Jone', name: 'Jone', password: 'abc123' });
+
+  const createdUserWithId = await User.findById(createdUser.body.id);
+
+  // Get token of the created user
+  userWithToken = await api.post('/api/login').send({
+    username: createdUser.body.username,
+    password: 'abc123',
+  });
+  userWithToken = userWithToken.body;
+
+  // Delete blog
   await Blog.deleteMany({});
+
+  // Create blog
   for (const iterator of initialBlog) {
+    // Create user field of the user
+
+    iterator.user = createdUserWithId._id;
     let blogObject = new Blog(iterator);
     await blogObject.save();
   }
@@ -48,7 +74,11 @@ test('Likes is default to 0', async () => {
 test('Bad request if title and url is missing', async () => {
   const nonCompletedBlog = new Blog({ author: 'Roofie', likes: 2 });
 
-  await api.post('/api/blogs').send(nonCompletedBlog).expect(400);
+  await api
+    .post('/api/blogs')
+    .send(nonCompletedBlog)
+    .set('Authorization', `Bearer ${userWithToken.token}`)
+    .expect(400);
 }, 100000);
 
 test('Removing an item', async () => {
@@ -59,7 +89,10 @@ test('Removing an item', async () => {
   const blogToDelete = currentBlogs.body[0];
 
   // Delete
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization', `Bearer ${userWithToken.token}`)
+    .expect(204);
 
   // Get blogs after delete
   const noteAtEnd = await api.get('/api/blogs');
