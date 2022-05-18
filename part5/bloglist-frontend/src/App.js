@@ -11,6 +11,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -26,6 +27,14 @@ const App = () => {
     }
   }, []);
 
+  const handleNotification = (notification) => {
+    setNotification(notification);
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -35,10 +44,14 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
       setUser(loggedUser);
       blogService.setToken(loggedUser.token);
+      handleNotification({ message: `Logged in` });
       setUsername('');
       setPassword('');
     } catch (error) {
-      console.log(error.response.data.error);
+      handleNotification({
+        message: `wrong username or password`,
+        type: 'danger',
+      });
     }
   };
 
@@ -47,6 +60,7 @@ const App = () => {
 
     window.localStorage.removeItem('loggedUser');
     setUser(null);
+    handleNotification({ message: `Logged out` });
   };
 
   const handleCreateBlog = async (e) => {
@@ -55,11 +69,17 @@ const App = () => {
     try {
       let newBlog = await blogService.addBlog({ title, author, url });
       setBlogs((latestBlogs) => latestBlogs.concat(newBlog));
+      handleNotification({ message: `a new blog ${title} by ${author} added` });
 
       setTitle('');
       setAuthor('');
       setUrl('');
-    } catch (error) {}
+    } catch (error) {
+      handleNotification({
+        message: `error creating new blog`,
+        type: 'danger',
+      });
+    }
   };
 
   const loginForm = () => (
@@ -122,7 +142,6 @@ const App = () => {
 
   const blogList = () => (
     <div>
-      <h2>blogs</h2>
       {user.name} logged in
       <button onClick={handleLogout}>logout</button>
       <h2>create new</h2>
@@ -133,7 +152,35 @@ const App = () => {
     </div>
   );
 
-  return <div>{!user ? loginForm() : blogList()}</div>;
+  const ErrorNotification = ({ message }) => (
+    <p
+      style={
+        message.type === 'danger'
+          ? {
+              backgroundColor: '#f1f1f1',
+              color: 'red',
+              border: '2px solid red',
+              padding: '5px',
+            }
+          : {
+              backgroundColor: '#f1f1f1',
+              color: 'green',
+              border: '2px solid green',
+              padding: '5px',
+            }
+      }
+    >
+      {message.message}
+    </p>
+  );
+
+  return (
+    <div>
+      <h2>blogs</h2>
+      {notification && <ErrorNotification message={notification} />}
+      {!user ? loginForm() : blogList()}
+    </div>
+  );
 };
 
 export default App;
