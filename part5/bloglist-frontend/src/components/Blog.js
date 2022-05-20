@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const BlogDetails = ({ blog, updateBlogLikes }) => {
+const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   return (
     <div>
       <p>{blog.url}</p>
@@ -15,11 +15,20 @@ const BlogDetails = ({ blog, updateBlogLikes }) => {
         </button>
       </p>
       <p>{blog.user.name}</p>
+      {user.username === blog.user.username && (
+        <button
+          onClick={() => {
+            deleteBlog(blog.id);
+          }}
+        >
+          remove
+        </button>
+      )}
     </div>
   );
 };
 
-const Blog = ({ blog, updateBlogLikes }) => {
+const Blog = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   const [view, setView] = useState(false);
 
   const toggleView = () => {
@@ -38,7 +47,14 @@ const Blog = ({ blog, updateBlogLikes }) => {
     <div style={blogStyle}>
       {blog.title} {blog.author}{' '}
       <button onClick={toggleView}>{!view ? 'view' : 'hide'}</button>
-      {view && <BlogDetails blog={blog} updateBlogLikes={updateBlogLikes} />}
+      {view && (
+        <BlogDetails
+          blog={blog}
+          updateBlogLikes={updateBlogLikes}
+          deleteBlog={deleteBlog}
+          user={user}
+        />
+      )}
     </div>
   );
 };
