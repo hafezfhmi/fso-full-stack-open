@@ -3,7 +3,7 @@ import { useState } from 'react';
 const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   const handleDeleteBlog = () => {
     let deleteConfirm = window.confirm(
-      `Remove blog ${blog.title} by ${blog.user.name}?`
+      `Remove blog ${blog.title} by ${blog.author}?`
     );
 
     if (deleteConfirm) {
@@ -49,7 +49,7 @@ const Blog = ({ blog, updateBlogLikes, deleteBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}{' '}
+      {blog.title} {blog.author}
       <button onClick={toggleView}>{!view ? 'view' : 'hide'}</button>
       {view && (
         <BlogDetails
