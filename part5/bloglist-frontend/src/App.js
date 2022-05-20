@@ -73,6 +73,16 @@ const App = () => {
     }
   };
 
+  const updateBlogLikes = async (blog) => {
+    try {
+      let newBlog = await blogService.updateLikes(blog.id, blog.likes + 1);
+
+      setBlogs(blogs.map((curr) => (curr.id !== newBlog.id ? curr : newBlog)));
+    } catch (error) {
+      handleNotification({ message: `error liking blog`, type: 'danger' });
+    }
+  };
+
   const handleLogout = (e) => {
     e.preventDefault();
 
@@ -119,7 +129,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlogLikes={updateBlogLikes} />
       ))}
     </div>
   );

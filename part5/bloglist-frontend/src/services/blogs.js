@@ -12,13 +12,19 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-const addBlog = (blog) => {
+const addBlog = async (blog) => {
   const config = {
     headers: { Authorization: token },
   };
 
-  const request = axios.post(baseUrl, blog, config);
-  return request.then((response) => response.data);
+  const response = await axios.post(baseUrl, blog, config);
+  return response.data;
 };
 
-export default { getAll, addBlog, setToken };
+const updateLikes = async (blogId, likes) => {
+  const response = await axios.put(`${baseUrl}/${blogId}`, { likes: likes });
+
+  return response.data;
+};
+
+export default { getAll, addBlog, setToken, updateLikes };
