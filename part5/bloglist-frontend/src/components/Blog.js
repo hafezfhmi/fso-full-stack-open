@@ -1,6 +1,16 @@
 import { useState } from 'react';
 
 const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
+  const handleDeleteBlog = () => {
+    let deleteConfirm = window.confirm(
+      `Remove blog ${blog.title} by ${blog.user.name}?`
+    );
+
+    if (deleteConfirm) {
+      deleteBlog(blog.id);
+    }
+  };
+
   return (
     <div>
       <p>{blog.url}</p>
@@ -16,13 +26,7 @@ const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
       </p>
       <p>{blog.user.name}</p>
       {user.username === blog.user.username && (
-        <button
-          onClick={() => {
-            deleteBlog(blog.id);
-          }}
-        >
-          remove
-        </button>
+        <button onClick={handleDeleteBlog}>remove</button>
       )}
     </div>
   );
