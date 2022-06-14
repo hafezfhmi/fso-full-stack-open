@@ -65,4 +65,25 @@ describe('Testing blog component where:', () => {
     element = screen.getByText(blog.likes, { exact: false });
     expect(element).toBeDefined();
   });
+
+  test('If likes button is clicked twice, event handler is called twice', async () => {
+    // Setup to make likes button appear
+    const mockHandler = jest.fn();
+
+    render(<Blog blog={blog} updateBlogLikes={mockHandler} user={user} />);
+
+    const userClick = userEvent.setup();
+
+    let button = screen.getByText('view');
+
+    await userClick.click(button);
+
+    // Click like button
+    button = screen.getByText('like');
+
+    await userClick.click(button);
+    await userClick.click(button);
+
+    expect(mockHandler.mock.calls).toHaveLength(2);
+  });
 });
