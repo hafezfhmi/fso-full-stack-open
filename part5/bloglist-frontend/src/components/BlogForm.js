@@ -23,6 +23,7 @@ const BlogForm = ({ setBlogs, handleNotification, createBlog }) => {
           type="text"
           name="title"
           value={title}
+          placeholder="title"
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
@@ -32,6 +33,7 @@ const BlogForm = ({ setBlogs, handleNotification, createBlog }) => {
           type="text"
           name="author"
           value={author}
+          placeholder="author"
           onChange={(e) => setAuthor(e.target.value)}
         />
       </div>
@@ -41,6 +43,7 @@ const BlogForm = ({ setBlogs, handleNotification, createBlog }) => {
           type="text"
           name="url"
           value={url}
+          placeholder="url"
           onChange={(e) => setUrl(e.target.value)}
         />
       </div>
