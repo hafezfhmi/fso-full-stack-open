@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 
 const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   const handleDeleteBlog = () => {
@@ -15,7 +16,7 @@ const BlogDetails = ({ blog, updateBlogLikes, deleteBlog, user }) => {
     <div>
       <p>{blog.url}</p>
       <p>
-        likes {blog.likes}{' '}
+        likes {blog.likes}{" "}
         <button
           onClick={() => {
             updateBlogLikes(blog);
@@ -42,7 +43,7 @@ const Blog = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    border: "solid",
     borderWidth: 1,
     marginBottom: 5,
   };
@@ -50,7 +51,7 @@ const Blog = ({ blog, updateBlogLikes, deleteBlog, user }) => {
   return (
     <div style={blogStyle} className="blog">
       {blog.title} {blog.author}
-      <button onClick={toggleView}>{!view ? 'view' : 'hide'}</button>
+      <button onClick={toggleView}>{!view ? "view" : "hide"}</button>
       {view && (
         <BlogDetails
           blog={blog}

@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState } from "react";
 
-const BlogForm = ({ setBlogs, handleNotification, createBlog }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+const BlogForm = ({ createBlog }) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   const handleCreateBlog = (e) => {
     e.preventDefault();
 
     createBlog({ title, author, url });
 
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    setTitle("");
+    setAuthor("");
+    setUrl("");
   };
 
   return (

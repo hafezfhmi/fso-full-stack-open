@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
-import Blog from './components/Blog';
-import BlogForm from './components/BlogForm';
-import Togglable from './components/Togglable';
-import blogService from './services/blogs';
-import loginService from './services/login';
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useRef } from "react";
+import Blog from "./components/Blog";
+import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
+import blogService from "./services/blogs";
+import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
 
@@ -19,7 +20,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    let loggedUser = window.localStorage.getItem('loggedUser');
+    let loggedUser = window.localStorage.getItem("loggedUser");
 
     if (loggedUser) {
       loggedUser = JSON.parse(loggedUser);
@@ -42,16 +43,16 @@ const App = () => {
     try {
       let loggedUser = await loginService.login({ username, password });
 
-      window.localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
+      window.localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
       setUser(loggedUser);
       blogService.setToken(loggedUser.token);
       handleNotification({ message: `Logged in` });
-      setUsername('');
-      setPassword('');
+      setUsername("");
+      setPassword("");
     } catch (error) {
       handleNotification({
         message: `wrong username or password`,
-        type: 'danger',
+        type: "danger",
       });
     }
   };
@@ -68,7 +69,7 @@ const App = () => {
     } catch (error) {
       handleNotification({
         message: `error creating new blog`,
-        type: 'danger',
+        type: "danger",
       });
     }
   };
@@ -79,7 +80,7 @@ const App = () => {
 
       setBlogs(blogs.map((curr) => (curr.id !== newBlog.id ? curr : newBlog)));
     } catch (error) {
-      handleNotification({ message: `error liking blog`, type: 'danger' });
+      handleNotification({ message: `error liking blog`, type: "danger" });
     }
   };
 
@@ -91,14 +92,14 @@ const App = () => {
 
       handleNotification({ message: `deleted blog` });
     } catch (error) {
-      handleNotification({ message: `error deleting blog`, type: 'danger' });
+      handleNotification({ message: `error deleting blog`, type: "danger" });
     }
   };
 
   const handleLogout = (e) => {
     e.preventDefault();
 
-    window.localStorage.removeItem('loggedUser');
+    window.localStorage.removeItem("loggedUser");
     setUser(null);
     handleNotification({ message: `Logged out` });
   };
@@ -157,18 +158,18 @@ const App = () => {
   const ErrorNotification = ({ message }) => (
     <p
       style={
-        message.type === 'danger'
+        message.type === "danger"
           ? {
-              backgroundColor: '#f1f1f1',
-              color: 'red',
-              border: '2px solid red',
-              padding: '5px',
+              backgroundColor: "#f1f1f1",
+              color: "red",
+              border: "2px solid red",
+              padding: "5px",
             }
           : {
-              backgroundColor: '#f1f1f1',
-              color: 'green',
-              border: '2px solid green',
-              padding: '5px',
+              backgroundColor: "#f1f1f1",
+              color: "green",
+              border: "2px solid green",
+              padding: "5px",
             }
       }
     >

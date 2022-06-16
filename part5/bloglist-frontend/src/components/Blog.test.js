@@ -1,23 +1,23 @@
-import React from 'react';
-import '@testing-library/jest-dom/extend-expect';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import Blog from './Blog';
+import React from "react";
+import "@testing-library/jest-dom/extend-expect";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Blog from "./Blog";
 
-describe('Testing blog component where:', () => {
+describe("Testing blog component where:", () => {
   const blog = {
-    title: 'Jack Adventure',
-    author: 'John Doe Author',
-    url: 'johndoe.com',
+    title: "Jack Adventure",
+    author: "John Doe Author",
+    url: "johndoe.com",
     likes: 2,
-    user: { name: 'John Doe Owner', username: 'JohnDoe' },
+    user: { name: "John Doe Owner", username: "JohnDoe" },
   };
 
   const user = {
-    username: 'JohnDoe',
+    username: "JohnDoe",
   };
 
-  test('Blog component render blog title and author but not url and likes by default', () => {
+  test("Blog component render blog title and author but not url and likes by default", () => {
     /*
     GETTING ELEMENT BY CSS CLASS
   
@@ -50,12 +50,12 @@ describe('Testing blog component where:', () => {
     expect(element).toBeNull();
   });
 
-  test('Blog url and likes are shown when view button is clicked', async () => {
+  test("Blog url and likes are shown when view button is clicked", async () => {
     render(<Blog blog={blog} user={user} />);
 
     const userClick = userEvent.setup();
 
-    const button = screen.getByText('view');
+    const button = screen.getByText("view");
 
     await userClick.click(button);
 
@@ -66,7 +66,7 @@ describe('Testing blog component where:', () => {
     expect(element).toBeDefined();
   });
 
-  test('If likes button is clicked twice, event handler is called twice', async () => {
+  test("If likes button is clicked twice, event handler is called twice", async () => {
     // Setup to make likes button appear
     const mockHandler = jest.fn();
 
@@ -74,12 +74,12 @@ describe('Testing blog component where:', () => {
 
     const userClick = userEvent.setup();
 
-    let button = screen.getByText('view');
+    let button = screen.getByText("view");
 
     await userClick.click(button);
 
     // Click like button
-    button = screen.getByText('like');
+    button = screen.getByText("like");
 
     await userClick.click(button);
     await userClick.click(button);
