@@ -46,7 +46,6 @@ describe("Blog app", function () {
         username: "admin",
         password: "abc123",
       }).then(({ body }) => {
-        console.log(body);
         localStorage.setItem("loggedUser", JSON.stringify(body));
         cy.visit("http://localhost:3000");
       });
@@ -68,14 +67,46 @@ describe("Blog app", function () {
         // Create a blog using custom cypress command
         cy.createBlog({
           title: "Auto Title",
-          author: "Auto author",
+          author: "Auto Author",
           url: "Auto url",
         });
       });
 
-      it.only("A user can like a blog", function () {
+      it("A user can like a blog", function () {
         cy.contains("view").click();
         cy.contains("like").click();
+      });
+
+      it("A user can delete a blog", function () {
+        cy.contains("view").click();
+        cy.contains("remove").click();
+        cy.contains("deleted blog");
+      });
+
+      it("Other user can't delete other user's blog", function () {
+        // Logout from current user
+        cy.contains("logout").click();
+
+        // Create a new user
+        const user = {
+          username: "admin2",
+          password: "abc123",
+          name: "admin2",
+        };
+        cy.request("POST", "http://localhost:3003/api/users/", user);
+
+        // Login user
+        cy.request("POST", "http://localhost:3003/api/login", {
+          username: "admin2",
+          password: "abc123",
+        }).then(({ body }) => {
+          localStorage.setItem("loggedUser", JSON.stringify(body));
+          cy.visit("http://localhost:3000");
+        });
+
+        // Check blog didn't have remove button
+        cy.contains("view").click();
+        cy.contains("Auto Title Auto Author").should("not.contain", "remove");
       });
     });
   });
