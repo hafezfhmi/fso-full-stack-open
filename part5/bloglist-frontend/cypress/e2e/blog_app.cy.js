@@ -52,7 +52,7 @@ describe("Blog app", function () {
       });
     });
 
-    it.only("A blog can be created", function () {
+    it("A blog can be created", function () {
       cy.contains("create new blog").click();
       cy.get("#title").type("test-auto-title");
       cy.get("#author").type("test-auto-author");
@@ -61,6 +61,22 @@ describe("Blog app", function () {
       cy.get("#create-button").click();
 
       cy.contains("test-auto-title test-auto-author");
+    });
+
+    describe("And a blog exsit", function () {
+      beforeEach(function () {
+        // Create a blog using custom cypress command
+        cy.createBlog({
+          title: "Auto Title",
+          author: "Auto author",
+          url: "Auto url",
+        });
+      });
+
+      it.only("A user can like a blog", function () {
+        cy.contains("view").click();
+        cy.contains("like").click();
+      });
     });
   });
 });
