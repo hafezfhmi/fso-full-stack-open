@@ -134,7 +134,7 @@ describe("Blog app", function () {
         });
       });
 
-      it.only("Blog is sorted based on amount of likes", function () {
+      it("Blog is sorted based on amount of likes", function () {
         cy.get("#blog-wrapper>.blog").eq(0).should("contain", "Auto Title1");
         cy.get("#blog-wrapper>.blog").eq(1).should("contain", "Auto Title2");
         cy.get("#blog-wrapper>.blog").eq(2).should("contain", "Auto Title3");
