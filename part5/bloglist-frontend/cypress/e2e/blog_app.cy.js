@@ -62,7 +62,7 @@ describe("Blog app", function () {
       cy.contains("test-auto-title test-auto-author");
     });
 
-    describe("And a blog exsit", function () {
+    describe("And a blog exist", function () {
       beforeEach(function () {
         // Create a blog using custom cypress command
         cy.createBlog({
@@ -107,6 +107,37 @@ describe("Blog app", function () {
         // Check blog didn't have remove button
         cy.contains("view").click();
         cy.contains("Auto Title Auto Author").should("not.contain", "remove");
+      });
+    });
+
+    describe("And multiple blog exist", function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: "Auto Title1",
+          author: "Auto Author1",
+          url: "Auto url1",
+          likes: 3,
+        });
+
+        cy.createBlog({
+          title: "Auto Title2",
+          author: "Auto Author2",
+          url: "Auto url2",
+          likes: 2,
+        });
+
+        cy.createBlog({
+          title: "Auto Title3",
+          author: "Auto Author3",
+          url: "Auto url3",
+          likes: 1,
+        });
+      });
+
+      it.only("Blog is sorted based on amount of likes", function () {
+        cy.get("#blog-wrapper>.blog").eq(0).should("contain", "Auto Title1");
+        cy.get("#blog-wrapper>.blog").eq(1).should("contain", "Auto Title2");
+        cy.get("#blog-wrapper>.blog").eq(2).should("contain", "Auto Title3");
       });
     });
   });
