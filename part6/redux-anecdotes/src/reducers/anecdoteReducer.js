@@ -17,6 +17,7 @@ const asObject = (anecdote) => {
   };
 };
 
+// action creator
 export const addVote = (id) => {
   return {
     type: "ADD VOTE",
@@ -24,19 +25,33 @@ export const addVote = (id) => {
   };
 };
 
+export const addAnecdote = (content) => {
+  return {
+    type: "ADD ANECDOTE",
+    data: { content },
+  };
+};
+
 const initialState = anecdotesAtStart.map(asObject);
 
+// reducer
 const reducer = (state = initialState, action) => {
   console.log("state now: ", state);
   console.log("action", action);
 
   switch (action.type) {
+    // ADD VOTE modify the state using map to increase votes and return the new state
     case "ADD VOTE":
       return state.map((currentState) =>
         currentState.id === action.data.id
           ? { ...currentState, votes: currentState.votes + 1 }
           : currentState
       );
+
+    // ADD ANECDOTE add new anecdotes to state using spread operator
+    case "ADD ANECDOTE":
+      let anecdote = asObject(action.data.content);
+      return [...state, anecdote];
 
     default:
       return state;
