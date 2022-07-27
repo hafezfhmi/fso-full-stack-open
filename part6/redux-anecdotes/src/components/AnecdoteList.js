@@ -4,8 +4,7 @@ import { addVote } from "../reducers/anecdoteReducer";
 const AnecdoteList = () => {
   // get state from redux store and sort it by votes
   const anecdotes = useSelector((state) => {
-    const anecndotesArray = [...state.anecdote];
-    return anecndotesArray.sort((a, b) => b.votes - a.votes);
+    return state.anecdote;
   });
 
   // get dispatch function from react-redux
@@ -17,9 +16,11 @@ const AnecdoteList = () => {
     dispatch(addVote(id));
   };
 
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
+
   return (
     <div>
-      {anecdotes.map((anecdote) => (
+      {sortedAnecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
