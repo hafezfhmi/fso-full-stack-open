@@ -11,6 +11,10 @@ const AnecdoteList = () => {
     return state.anecdote;
   });
 
+  const filter = useSelector((state) => {
+    return state.filter;
+  });
+
   // get dispatch function from react-redux
   const dispatch = useDispatch();
 
@@ -29,9 +33,13 @@ const AnecdoteList = () => {
 
   const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
 
+  const filteredAnecdotes = sortedAnecdotes.filter((anecdote) =>
+    anecdote.content.includes(filter)
+  );
+
   return (
     <div>
-      {sortedAnecdotes.map((anecdote) => (
+      {filteredAnecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
