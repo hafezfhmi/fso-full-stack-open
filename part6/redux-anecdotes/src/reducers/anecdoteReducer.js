@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -17,45 +19,26 @@ const asObject = (anecdote) => {
   };
 };
 
-// action creator
-export const addVote = (id) => {
-  return {
-    type: "ADD VOTE",
-    data: { id },
-  };
-};
-
-export const addAnecdote = (content) => {
-  return {
-    type: "ADD ANECDOTE",
-    data: { content },
-  };
-};
-
 const initialState = anecdotesAtStart.map(asObject);
 
-// reducer
-const reducer = (state = initialState, action) => {
-  console.log("state now: ", state);
-  console.log("action", action);
-
-  switch (action.type) {
-    // ADD VOTE modify the state using map to increase votes and return the new state
-    case "ADD VOTE":
+const anecdoteSlice = createSlice({
+  name: "anecdote",
+  initialState,
+  reducers: {
+    addVote(state, action) {
       return state.map((currentState) =>
-        currentState.id === action.data.id
+        currentState.id === action.payload
           ? { ...currentState, votes: currentState.votes + 1 }
           : currentState
       );
-
-    // ADD ANECDOTE add new anecdotes to state using spread operator
-    case "ADD ANECDOTE":
-      let anecdote = asObject(action.data.content);
+    },
+    addAnecdote(state, action) {
+      let anecdote = asObject(action.payload);
       return [...state, anecdote];
+    },
+  },
+});
 
-    default:
-      return state;
-  }
-};
+export const { addVote, addAnecdote } = anecdoteSlice.actions;
 
-export default reducer;
+export default anecdoteSlice.reducer;

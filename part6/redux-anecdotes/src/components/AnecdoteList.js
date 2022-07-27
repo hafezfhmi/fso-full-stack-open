@@ -3,9 +3,10 @@ import { addVote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = () => {
   // get state from redux store and sort it by votes
-  const anecdotes = useSelector((state) =>
-    state.sort((a, b) => b.votes - a.votes)
-  );
+  const anecdotes = useSelector((state) => {
+    const anecndotesArray = [...state.anecdote];
+    return anecndotesArray.sort((a, b) => b.votes - a.votes);
+  });
 
   // get dispatch function from react-redux
   const dispatch = useDispatch();
