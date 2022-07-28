@@ -3,6 +3,11 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/anecdotes";
 
+const getAnecdote = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data;
+};
+
 const getAll = async () => {
   const response = await axios.get(baseUrl);
   return response.data;
@@ -14,7 +19,17 @@ const createNew = async (content) => {
   return response.data;
 };
 
+const addVote = async (id) => {
+  const anecdoteToVote = await getAnecdote(id);
+  const response = await axios.patch(`${baseUrl}/${id}`, {
+    votes: anecdoteToVote.votes + 1,
+  });
+  return response.data;
+};
+
 export default {
-  getAll: getAll,
-  createNew: createNew,
+  getAnecdote,
+  getAll,
+  createNew,
+  addVote,
 };

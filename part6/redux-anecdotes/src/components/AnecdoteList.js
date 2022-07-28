@@ -25,7 +25,6 @@ const AnecdoteList = () => {
 
   // dispatch the action returned from addVote
   const vote = (id) => {
-    console.log("vote", id);
     dispatch(addVote(id));
 
     const votedAnecdote = anecdotes.find((anecdote) => anecdote.id === id);
