@@ -1,11 +1,22 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addVote } from "../reducers/anecdoteReducer";
+import { addVote, setAnecdotes } from "../reducers/anecdoteReducer";
 import {
   setNotification,
   removeNotification,
 } from "../reducers/notificationReducer";
+import anecdotesService from "../services/anecdotes";
 
 const AnecdoteList = () => {
+  // get dispatch function from react-redux
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    anecdotesService
+      .getAll()
+      .then((anecdotes) => dispatch(setAnecdotes(anecdotes)));
+  }, [dispatch]);
+
   // get state from redux store and sort it by votes
   const anecdotes = useSelector((state) => {
     return state.anecdote;
@@ -14,9 +25,6 @@ const AnecdoteList = () => {
   const filter = useSelector((state) => {
     return state.filter;
   });
-
-  // get dispatch function from react-redux
-  const dispatch = useDispatch();
 
   // dispatch the action returned from addVote
   const vote = (id) => {
