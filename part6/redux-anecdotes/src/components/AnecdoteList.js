@@ -1,20 +1,17 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addVote, setAnecdotes } from "../reducers/anecdoteReducer";
+import { addVote, initializeAnecdotes } from "../reducers/anecdoteReducer";
 import {
   setNotification,
   removeNotification,
 } from "../reducers/notificationReducer";
-import anecdotesService from "../services/anecdotes";
 
 const AnecdoteList = () => {
   // get dispatch function from react-redux
   const dispatch = useDispatch();
 
   useEffect(() => {
-    anecdotesService
-      .getAll()
-      .then((anecdotes) => dispatch(setAnecdotes(anecdotes)));
+    dispatch(initializeAnecdotes());
   }, [dispatch]);
 
   // get state from redux store and sort it by votes
