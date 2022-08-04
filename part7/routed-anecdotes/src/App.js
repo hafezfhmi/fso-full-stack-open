@@ -80,10 +80,6 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  // const [content, setContent] = useState("");
-  // const [author, setAuthor] = useState("");
-  // const [info, setInfo] = useState("");
-
   const content = useField("text");
   const author = useField("text");
   const info = useField("text");
@@ -96,6 +92,13 @@ const CreateNew = (props) => {
       info: info.value,
       votes: 0,
     });
+  };
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   return (
@@ -115,6 +118,7 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   );
