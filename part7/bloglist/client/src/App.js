@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { displayNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
@@ -7,11 +9,13 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
+  const dispatch = useDispatch();
+
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
+  const notification = useSelector((state) => state.notification);
 
   const blogFormRef = useRef();
 
@@ -30,11 +34,7 @@ const App = () => {
   }, []);
 
   const handleNotification = (notification) => {
-    setNotification(notification);
-
-    setTimeout(() => {
-      setNotification(null);
-    }, 2000);
+    dispatch(displayNotification(notification));
   };
 
   const handleLogin = async (e) => {
