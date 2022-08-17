@@ -8,6 +8,7 @@ import {
   updateBlogLikes,
   deleteBlog,
 } from "./reducers/blogReducer";
+import { setUser } from "./reducers/userReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
@@ -19,10 +20,10 @@ const App = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const blogs = useSelector((state) => state.blog);
   const notification = useSelector((state) => state.notification);
+  const user = useSelector((state) => state.user);
 
   const blogFormRef = useRef();
 
@@ -35,7 +36,7 @@ const App = () => {
 
     if (loggedUser) {
       loggedUser = JSON.parse(loggedUser);
-      setUser(loggedUser);
+      dispatch(setUser(loggedUser));
       blogService.setToken(loggedUser.token);
     }
   }, []);
@@ -51,7 +52,7 @@ const App = () => {
       let loggedUser = await loginService.login({ username, password });
 
       window.localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
-      setUser(loggedUser);
+      dispatch(setUser(loggedUser));
       blogService.setToken(loggedUser.token);
       handleNotification({ message: `Logged in` });
       setUsername("");
@@ -81,7 +82,7 @@ const App = () => {
     e.preventDefault();
 
     window.localStorage.removeItem("loggedUser");
-    setUser(null);
+    dispatch(setUser(null));
     handleNotification({ message: `Logged out` });
   };
 
