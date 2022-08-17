@@ -2,6 +2,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { displayNotification } from "./reducers/notificationReducer";
+import {
+  initializeBlogs,
+  createBlog,
+  updateBlogLikes,
+} from "./reducers/blogReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
@@ -11,16 +16,17 @@ import loginService from "./services/login";
 const App = () => {
   const dispatch = useDispatch();
 
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const blogs = useSelector((state) => state.blog);
   const notification = useSelector((state) => state.notification);
 
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    dispatch(initializeBlogs());
   }, []);
 
   useEffect(() => {
@@ -57,28 +63,16 @@ const App = () => {
     }
   };
 
-  const createBlog = async (blog) => {
-    try {
-      blogFormRef.current.toggleVisibility();
-
-      let newBlog = await blogService.addBlog(blog);
-      setBlogs((latestBlogs) => latestBlogs.concat(newBlog));
-      handleNotification({
-        message: `a new blog ${newBlog.title} by ${newBlog.author} added`,
-      });
-    } catch (error) {
-      handleNotification({
-        message: `error creating new blog`,
-        type: "danger",
-      });
-    }
+  const handleCreateBlog = async (blog) => {
+    blogFormRef.current.toggleVisibility();
+    dispatch(createBlog(blog));
   };
 
-  const updateBlogLikes = async (blog) => {
+  const handleUpdateBlogLikes = async (blog) => {
     try {
-      let newBlog = await blogService.updateLikes(blog.id, blog.likes + 1);
-
-      setBlogs(blogs.map((curr) => (curr.id !== newBlog.id ? curr : newBlog)));
+      // let newBlog = await blogService.updateLikes(blog.id, blog.likes + 1);
+      // setBlogs(blogs.map((curr) => (curr.id !== newBlog.id ? curr : newBlog)));
+      dispatch(updateBlogLikes(blog));
     } catch (error) {
       handleNotification({ message: `error liking blog`, type: "danger" });
     }
@@ -88,7 +82,7 @@ const App = () => {
     try {
       await blogService.deleteBlog(blogId);
 
-      setBlogs(blogs.filter((curr) => curr.id !== blogId));
+      // setBlogs(blogs.filter((curr) => curr.id !== blogId));
 
       handleNotification({ message: `deleted blog` });
     } catch (error) {
@@ -139,20 +133,16 @@ const App = () => {
       <button onClick={handleLogout}>logout</button>
       <h2>create new</h2>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm
-          setBlogs={setBlogs}
-          handleNotification={handleNotification}
-          createBlog={createBlog}
-        />
+        <BlogForm createBlog={handleCreateBlog} />
       </Togglable>
       <div id="blog-wrapper">
-        {blogs
+        {[...blogs]
           .sort((a, b) => b.likes - a.likes)
           .map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
-              updateBlogLikes={updateBlogLikes}
+              updateBlogLikes={handleUpdateBlogLikes}
               deleteBlog={deleteBlog}
               user={user}
             />
