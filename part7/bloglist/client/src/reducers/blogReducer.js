@@ -6,13 +6,16 @@ const blogSlice = createSlice({
   name: "blog",
   initialState: [],
   reducers: {
-    // updateBlog(state, action) {
-    //   return state.map((blog) =>
-    //     blog.id === action.payload.id ? action.payload : blog
-    //   );
-    // },
+    updateBlog(state, action) {
+      return state.map((blog) =>
+        blog.id === action.payload.id ? action.payload : blog
+      );
+    },
     addBlog(state, action) {
       return [...state, action.payload];
+    },
+    removeBlog(state, action) {
+      return state.filter((blog) => blog.id !== action.payload);
     },
     setBlogs(state, action) {
       return action.payload;
@@ -20,7 +23,7 @@ const blogSlice = createSlice({
   },
 });
 
-export const { setBlogs, addBlog, updateBlog } = blogSlice.actions;
+export const { setBlogs, addBlog, removeBlog, updateBlog } = blogSlice.actions;
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
@@ -51,11 +54,35 @@ export const createBlog = (blog) => {
 };
 
 export const updateBlogLikes = (blog) => {
-  console.log(blog);
-  //   return async (dispatch) => {
-  //     let newBlog = await blogServices.updateLikes(blog.id, blog.likes + 1);
-  //     dispatch(updateBlog(newBlog));
-  //   };
+  return async (dispatch) => {
+    try {
+      let newBlog = await blogServices.updateLikes(blog.id, blog.likes + 1);
+      dispatch(updateBlog(newBlog));
+      dispatch(
+        displayNotification({
+          message: `you liked ${newBlog.title} by ${newBlog.author}`,
+        })
+      );
+    } catch (error) {
+      dispatch(
+        displayNotification({ message: `error liking blog`, type: "danger" })
+      );
+    }
+  };
+};
+
+export const deleteBlog = (blogId) => {
+  return async (dispatch) => {
+    try {
+      await blogServices.deleteBlog(blogId);
+      dispatch(removeBlog(blogId));
+      dispatch(displayNotification({ message: `deleted blog` }));
+    } catch (error) {
+      dispatch(
+        displayNotification({ message: `error deleting blog`, type: "danger" })
+      );
+    }
+  };
 };
 
 export default blogSlice.reducer;

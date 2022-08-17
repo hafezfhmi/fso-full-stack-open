@@ -6,6 +6,7 @@ import {
   initializeBlogs,
   createBlog,
   updateBlogLikes,
+  deleteBlog,
 } from "./reducers/blogReducer";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -69,25 +70,11 @@ const App = () => {
   };
 
   const handleUpdateBlogLikes = async (blog) => {
-    try {
-      // let newBlog = await blogService.updateLikes(blog.id, blog.likes + 1);
-      // setBlogs(blogs.map((curr) => (curr.id !== newBlog.id ? curr : newBlog)));
-      dispatch(updateBlogLikes(blog));
-    } catch (error) {
-      handleNotification({ message: `error liking blog`, type: "danger" });
-    }
+    dispatch(updateBlogLikes(blog));
   };
 
-  const deleteBlog = async (blogId) => {
-    try {
-      await blogService.deleteBlog(blogId);
-
-      // setBlogs(blogs.filter((curr) => curr.id !== blogId));
-
-      handleNotification({ message: `deleted blog` });
-    } catch (error) {
-      handleNotification({ message: `error deleting blog`, type: "danger" });
-    }
+  const handleDeleteBlog = async (blogId) => {
+    dispatch(deleteBlog(blogId));
   };
 
   const handleLogout = (e) => {
@@ -143,7 +130,7 @@ const App = () => {
               key={blog.id}
               blog={blog}
               updateBlogLikes={handleUpdateBlogLikes}
-              deleteBlog={deleteBlog}
+              deleteBlog={handleDeleteBlog}
               user={user}
             />
           ))}
