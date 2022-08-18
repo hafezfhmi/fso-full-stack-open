@@ -9,6 +9,7 @@ import BlogList from "./components/BlogList";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
+import Users from "./pages/Users";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,12 +45,13 @@ const App = () => {
       {notification && <Notification message={notification} />}
       {user && (
         <div>
-          {user.name} logged in
+          <p>{user.name} logged in</p>
           <button onClick={handleLogout}>logout</button>
         </div>
       )}
       <Routes>
         <Route path="/" element={!user ? <LoginForm /> : <BlogList />} />
+        <Route path="/users" element={!user ? <LoginForm /> : <Users />} />
       </Routes>
     </Router>
   );
