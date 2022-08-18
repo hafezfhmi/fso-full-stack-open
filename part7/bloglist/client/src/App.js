@@ -10,6 +10,7 @@ import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import Users from "./pages/Users";
+import User from "./pages/User";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={!user ? <LoginForm /> : <BlogList />} />
         <Route path="/users" element={!user ? <LoginForm /> : <Users />} />
+        <Route path="/users/:userId" element={<User />} />
       </Routes>
     </Router>
   );

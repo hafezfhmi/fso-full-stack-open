@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt');
-const usersRouter = require('express').Router();
-const User = require('../models/user');
+const bcrypt = require("bcrypt");
+const usersRouter = require("express").Router();
+const User = require("../models/user");
 
-usersRouter.get('/', async (req, res, next) => {
+usersRouter.get("/", async (req, res, next) => {
   try {
-    const users = await User.find({}).populate('blogs');
+    const users = await User.find({}).populate("blogs");
 
     res.json(users);
   } catch (error) {
@@ -12,13 +12,24 @@ usersRouter.get('/', async (req, res, next) => {
   }
 });
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.get("/:id", async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const user = await User.findById(id).populate("blogs");
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+usersRouter.post("/", async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
     const existedUsername = await User.findOne({ username });
     if (existedUsername) {
-      return res.status(400).json({ error: 'username must be unique' });
+      return res.status(400).json({ error: "username must be unique" });
     }
 
     const saltRounds = 10;
