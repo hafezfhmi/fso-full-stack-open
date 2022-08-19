@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState("");
@@ -17,44 +18,45 @@ const BlogForm = ({ createBlog }) => {
   };
 
   return (
-    <form onSubmit={handleCreateBlog}>
-      <div>
-        title:
-        <input
-          type="text"
-          name="title"
-          id="title"
+    <Form onSubmit={handleCreateBlog}>
+      <Form.Group className="mb-3" controlId="formTitle">
+        <Form.Label>Title</Form.Label>
+        <Form.Control
+          required
+          placeholder="Enter Title"
           value={title}
-          placeholder="title"
           onChange={(e) => setTitle(e.target.value)}
         />
-      </div>
-      <div>
-        author:
-        <input
-          type="text"
-          name="author"
-          id="author"
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formAuthor">
+        <Form.Label>Author</Form.Label>
+        <Form.Control
+          required
+          placeholder="Enter Author"
           value={author}
-          placeholder="author"
           onChange={(e) => setAuthor(e.target.value)}
         />
-      </div>
-      <div>
-        url:
-        <input
-          type="text"
-          name="url"
-          id="url"
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formUrl">
+        <Form.Label>Url</Form.Label>
+        <Form.Control
+          required
+          placeholder="Enter Url"
           value={url}
-          placeholder="url"
           onChange={(e) => setUrl(e.target.value)}
         />
-      </div>
-      <button type="submit" id="create-button">
-        create
-      </button>
-    </form>
+      </Form.Group>
+      <Button
+        variant="primary"
+        type="submit"
+        id="create-button"
+        className="mb-2"
+      >
+        Create
+      </Button>
+    </Form>
   );
 };
 

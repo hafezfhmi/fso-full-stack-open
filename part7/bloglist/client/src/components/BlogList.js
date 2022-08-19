@@ -4,6 +4,7 @@ import { createBlog } from "../reducers/blogReducer";
 import Blog from "./Blog";
 import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
+import { Table } from "react-bootstrap";
 
 const BlogList = () => {
   const dispatch = useDispatch();
@@ -18,16 +19,20 @@ const BlogList = () => {
 
   return (
     <div>
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+      <h2 className="my-4">Blog List</h2>
+
+      <Togglable buttonLabel="Create new blog" ref={blogFormRef}>
         <BlogForm createBlog={handleCreateBlog} />
       </Togglable>
-      <div id="blog-wrapper">
-        {[...blogs]
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
-      </div>
+      <Table striped>
+        <tbody>
+          {[...blogs]
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+        </tbody>
+      </Table>
     </div>
   );
 };

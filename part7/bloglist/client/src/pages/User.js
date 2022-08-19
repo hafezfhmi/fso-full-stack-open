@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import userServices from "../services/users";
+import { Table } from "react-bootstrap";
 
 const User = () => {
   const [user, setUser] = useState(null);
@@ -18,15 +19,23 @@ const User = () => {
     return null;
   }
 
+  console.log(user);
+
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
-        {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
+      <h2 className="my-4">{user.name}</h2>
+      <h3>Added blogs:</h3>
+      <Table striped>
+        <tbody>
+          {user.blogs.map((blog) => (
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };

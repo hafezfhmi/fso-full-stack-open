@@ -100,6 +100,10 @@ blogsRouter.post("/:id/comments", async (req, res, next) => {
     const blogId = req.params.id;
     const { comment } = req.body;
 
+    if (!comment) {
+      return res.status(404).json({ error: "Content missing" });
+    }
+
     let updatedBlog = await Blog.findByIdAndUpdate(
       blogId,
       {

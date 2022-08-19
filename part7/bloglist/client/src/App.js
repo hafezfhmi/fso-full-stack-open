@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { displayNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setUser } from "./reducers/userReducer";
@@ -12,6 +12,8 @@ import blogService from "./services/blogs";
 import Users from "./pages/Users";
 import User from "./pages/User";
 import Blog from "./pages/Blog";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -43,27 +45,53 @@ const App = () => {
 
   return (
     <Router>
-      <nav style={{ backgroundColor: "gray", padding: "2px 4px" }}>
-        <Link to={"/"}>blogs</Link> <Link to={"/users"}>users</Link>{" "}
-        {user && (
-          <span>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
-          </span>
-        )}
-      </nav>
+      <Navbar bg="primary" variant="dark" expand="lg">
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand href="#home">Blog App</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-      <h2>blog app</h2>
-      {notification && <Notification message={notification} />}
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <LinkContainer to="/">
+                <Nav.Link>Blogs</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/users">
+                <Nav.Link>Users</Nav.Link>
+              </LinkContainer>
+            </Nav>
 
-      <Routes>
-        <Route path="/" element={!user ? <LoginForm /> : <BlogList />} />
-        <Route
-          path="/blogs/:blogId"
-          element={!user ? <LoginForm /> : <Blog />}
-        />
-        <Route path="/users" element={!user ? <LoginForm /> : <Users />} />
-        <Route path="/users/:userId" element={<User />} />
-      </Routes>
+            {user && (
+              <>
+                <Navbar.Text className="pe-2">
+                  Signed in as: {user.name}
+                </Navbar.Text>
+                <Button variant="light" size="sm" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            )}
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      <Container>
+        {notification && <Notification message={notification} />}
+
+        <Routes>
+          <Route path="/" element={!user ? <LoginForm /> : <BlogList />} />
+          <Route
+            path="/blogs/:blogId"
+            element={!user ? <LoginForm /> : <Blog />}
+          />
+          <Route path="/users" element={!user ? <LoginForm /> : <Users />} />
+          <Route
+            path="/users/:userId"
+            element={!user ? <LoginForm /> : <User />}
+          />
+        </Routes>
+      </Container>
     </Router>
   );
 };

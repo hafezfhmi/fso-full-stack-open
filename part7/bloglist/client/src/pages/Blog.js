@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import blogServices from "../services/blogs";
 import {
   updateBlog,
@@ -8,6 +8,7 @@ import {
   addBlogComment,
   deleteBlog,
 } from "../reducers/blogReducer";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 const Blog = () => {
   const dispatch = useDispatch();
@@ -47,30 +48,47 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>
-        {blog.title} {blog.author}
+      <h2 className="my-4">
+        {blog.title} by {blog.author}
       </h2>
 
-      <a href={blog.url}>{blog.url}</a>
-      <p>
-        likes {blog.likes} <button onClick={handleUpdateBlogLikes}>like</button>
-      </p>
-      <p>added by {blog.user.name}</p>
-      {user.username === blog.user.username && (
-        <button onClick={handleDeleteBlog}>remove</button>
-      )}
+      <div className="mb-4">
+        <p>
+          Url: <a href={blog.url}>{blog.url}</a>
+        </p>
+        <p>
+          Likes: {blog.likes}{" "}
+          <Button className="mx-3" size="sm" onClick={handleUpdateBlogLikes}>
+            Like
+          </Button>
+        </p>
+        <p>
+          Added by <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
+        </p>
+        {user.username === blog.user.username && (
+          <Button variant="danger" onClick={handleDeleteBlog}>
+            Remove
+          </Button>
+        )}
+      </div>
 
-      <h3>comments</h3>
-      <form onSubmit={handleAddComment}>
-        <input type="text" name="comment" />
-        <button type="submit">add comment</button>
-      </form>
+      <h4>Comments</h4>
+      <Form onSubmit={handleAddComment}>
+        <Row className="mb-3">
+          <Col>
+            <Form.Control placeholder="Enter comment" name="comment" />
+          </Col>
+          <Col>
+            <Button type="submit">Add comment</Button>
+          </Col>
+        </Row>
+      </Form>
 
-      <ul>
-        {blog.comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
-        ))}
-      </ul>
+      {blog.comments.map((comment, index) => (
+        <Card key={index} bg="light" className="mb-2">
+          <Card.Body>{comment}</Card.Body>
+        </Card>
+      ))}
     </div>
   );
 };
