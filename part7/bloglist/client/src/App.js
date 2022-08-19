@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { displayNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setUser } from "./reducers/userReducer";
@@ -43,14 +43,18 @@ const App = () => {
 
   return (
     <Router>
-      <h2>blogs</h2>
+      <nav style={{ backgroundColor: "gray", padding: "2px 4px" }}>
+        <Link to={"/"}>blogs</Link> <Link to={"/users"}>users</Link>{" "}
+        {user && (
+          <span>
+            {user.name} logged in <button onClick={handleLogout}>logout</button>
+          </span>
+        )}
+      </nav>
+
+      <h2>blog app</h2>
       {notification && <Notification message={notification} />}
-      {user && (
-        <div>
-          <p>{user.name} logged in</p>
-          <button onClick={handleLogout}>logout</button>
-        </div>
-      )}
+
       <Routes>
         <Route path="/" element={!user ? <LoginForm /> : <BlogList />} />
         <Route
