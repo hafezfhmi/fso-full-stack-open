@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
-const blogsRouter = require('express').Router();
-const Blog = require('../models/blog');
-const User = require('../models/user');
+const jwt = require("jsonwebtoken");
+const blogsRouter = require("express").Router();
+const Blog = require("../models/blog");
+const User = require("../models/user");
 
-blogsRouter.get('/', async (request, response, next) => {
+blogsRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate('user');
+    const blogs = await Blog.find({}).populate("user");
 
     response.json(blogs);
   } catch (err) {
@@ -13,7 +13,18 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 });
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.get("/:id", async (request, response, next) => {
+  try {
+    let blogId = request.params.id;
+    const blogs = await Blog.findById(blogId).populate("user");
+
+    response.json(blogs);
+  } catch (err) {
+    next(err);
+  }
+});
+
+blogsRouter.post("/", async (request, response, next) => {
   try {
     const { title, author, url, likes } = request.body;
 
@@ -21,7 +32,7 @@ blogsRouter.post('/', async (request, response, next) => {
     const decodedToken = jwt.verify(token, process.env.SECRET);
 
     if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' });
+      return response.status(401).json({ error: "token missing or invalid" });
     }
 
     const user = await User.findById(decodedToken.id);
@@ -39,7 +50,7 @@ blogsRouter.post('/', async (request, response, next) => {
   }
 });
 
-blogsRouter.put('/:id', async (request, response, next) => {
+blogsRouter.put("/:id", async (request, response, next) => {
   try {
     const body = request.body;
 
@@ -51,7 +62,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
       request.params.id,
       newBlog,
       { new: true }
-    ).populate('user');
+    ).populate("user");
 
     response.json(updatedBlog);
   } catch (error) {
@@ -59,13 +70,13 @@ blogsRouter.put('/:id', async (request, response, next) => {
   }
 });
 
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete("/:id", async (request, response, next) => {
   try {
     const token = request.token;
     const decodedToken = jwt.verify(token, process.env.SECRET);
 
     if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' });
+      return response.status(401).json({ error: "token missing or invalid" });
     }
 
     const blogToDelete = await Blog.findById(request.params.id);
