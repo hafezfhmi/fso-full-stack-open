@@ -85,4 +85,17 @@ export const deleteBlog = (blogId) => {
   };
 };
 
+export const addBlogComment = (blogId, comment) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogServices.addComment(blogId, comment);
+      dispatch(updateBlog(updatedBlog));
+    } catch (error) {
+      dispatch(
+        displayNotification({ message: `error adding comment`, type: "danger" })
+      );
+    }
+  };
+};
+
 export default blogSlice.reducer;
