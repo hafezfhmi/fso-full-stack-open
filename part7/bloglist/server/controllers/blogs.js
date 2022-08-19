@@ -95,4 +95,23 @@ blogsRouter.delete("/:id", async (request, response, next) => {
   }
 });
 
+blogsRouter.post("/:id/comments", async (req, res, next) => {
+  try {
+    const blogId = req.params.id;
+    const { comment } = req.body;
+
+    let updatedBlog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: { comments: comment },
+      },
+      { new: true }
+    );
+
+    res.status(201).json(updatedBlog);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = blogsRouter;
